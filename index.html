@@ -8,19 +8,24 @@
   </head>
   <body>
     <main class="app-shell">
-      <section class="hero" aria-label="SignalStack public newsletter">
+      <div class="view-switch" aria-label="View switcher">
+        <a class="view-link" data-view-link="reader" href="#reader">Reader</a>
+        <a class="view-link" data-view-link="editor" href="#editor">Editor</a>
+      </div>
+
+      <section class="hero app-view" id="reader" data-view="reader" aria-label="SignalStack public newsletter">
         <nav class="nav">
-          <a class="brand" href="#top" aria-label="SignalStack home">
+          <a class="brand" href="#reader" aria-label="SignalStack home">
             <span class="brand-mark">S</span>
             <span>SignalStack</span>
           </a>
           <div class="nav-actions">
-            <a href="#crm">CRM</a>
+            <a href="#editor">Editor CRM</a>
             <a href="#preview">Preview</a>
           </div>
         </nav>
 
-        <div class="hero-layout" id="top">
+        <div class="hero-layout">
           <section class="hero-copy">
             <p class="pill">AI newsletter operating system</p>
             <h1 id="publicTitle">A sharper weekly brief for people building with AI.</h1>
@@ -76,10 +81,13 @@
         </div>
       </section>
 
-      <section class="crm-wrap" id="crm" aria-label="Newsletter CRM and editor">
+      <section class="crm-wrap app-view" id="editor" data-view="editor" aria-label="Newsletter CRM and editor">
         <div class="section-intro">
-          <p class="pill dark">Background CRM</p>
-          <h2>Change the public app from one control panel.</h2>
+          <div>
+            <p class="pill dark">Background CRM</p>
+            <h2>Change the public app from one control panel.</h2>
+          </div>
+          <a class="reader-return" href="#reader">Open reader view</a>
         </div>
 
         <div class="crm-grid">

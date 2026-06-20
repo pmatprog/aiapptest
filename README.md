@@ -10,6 +10,13 @@ After GitHub Pages finishes deploying, open:
 https://pmatprog.github.io/aiapptest/
 ```
 
+Direct views:
+
+```text
+https://pmatprog.github.io/aiapptest/#reader
+https://pmatprog.github.io/aiapptest/#editor
+```
+
 ## Run Locally
 
 Open `index.html` directly, or run a local static server:
@@ -22,6 +29,13 @@ Then visit:
 
 ```text
 http://localhost:8000
+```
+
+Direct local views:
+
+```text
+http://localhost:8000/#reader
+http://localhost:8000/#editor
 ```
 
 If Node and npm are available, you can also run:
@@ -39,6 +53,7 @@ http://localhost:5173
 ## Features
 
 - Issue planning with audience, voice, sponsor, and publish date fields
+- Separate reader and editor views with direct links
 - Story queue with category, impact, and source metadata
 - Live generated newsletter preview
 - Browser-saved drafts

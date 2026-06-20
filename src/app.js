@@ -50,6 +50,8 @@ const publicView = {
   storyStrip: document.querySelector("#storyStrip")
 };
 
+const viewLinks = document.querySelectorAll("[data-view-link]");
+
 const state = {
   stories: []
 };
@@ -195,6 +197,20 @@ function renderPreview() {
   renderPublicView();
 }
 
+function activeViewFromHash() {
+  const hash = window.location.hash.replace("#", "");
+  if (hash === "editor" || hash === "crm") return "editor";
+  return "reader";
+}
+
+function syncActiveView() {
+  const activeView = activeViewFromHash();
+  document.body.dataset.activeView = activeView;
+  viewLinks.forEach((link) => {
+    link.classList.toggle("is-active", link.dataset.viewLink === activeView);
+  });
+}
+
 function saveDraft(showStatus = true) {
   localStorage.setItem(storageKey, JSON.stringify(collectDraft()));
   if (!showStatus) return;
@@ -270,6 +286,9 @@ document.querySelector("#signupForm").addEventListener("submit", (event) => {
   event.currentTarget.querySelector("button").textContent = "You're in";
 });
 
+window.addEventListener("hashchange", syncActiveView);
+
 loadDraft();
 renderStories();
 renderPreview();
+syncActiveView();
