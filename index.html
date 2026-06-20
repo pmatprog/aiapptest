@@ -3,84 +3,166 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Newsletter Desk</title>
+    <title>SignalStack AI Newsletter</title>
     <link rel="stylesheet" href="src/styles.css">
   </head>
   <body>
-    <main class="shell">
-      <section class="workspace" aria-label="Newsletter editor">
-        <header class="topbar">
-          <div>
-            <p class="kicker">Issue Desk</p>
-            <h1>AI Newsletter</h1>
+    <main class="app-shell">
+      <section class="hero" aria-label="SignalStack public newsletter">
+        <nav class="nav">
+          <a class="brand" href="#top" aria-label="SignalStack home">
+            <span class="brand-mark">S</span>
+            <span>SignalStack</span>
+          </a>
+          <div class="nav-actions">
+            <a href="#crm">CRM</a>
+            <a href="#preview">Preview</a>
           </div>
-          <div class="actions">
-            <button class="icon-button" id="saveDraft" type="button" title="Save draft" aria-label="Save draft">
-              <span aria-hidden="true">S</span>
-            </button>
-            <button class="icon-button" id="copyMarkdown" type="button" title="Copy markdown" aria-label="Copy markdown">
-              <span aria-hidden="true">C</span>
-            </button>
-            <button class="primary-action" id="downloadMarkdown" type="button">Export</button>
-          </div>
-        </header>
+        </nav>
 
-        <section class="editor-grid">
-          <aside class="panel controls" aria-label="Issue controls">
+        <div class="hero-layout" id="top">
+          <section class="hero-copy">
+            <p class="pill">AI newsletter operating system</p>
+            <h1 id="publicTitle">A sharper weekly brief for people building with AI.</h1>
+            <p class="hero-text" id="publicSubtitle">
+              Curate the signal, package the story, and ship a polished issue from one calm control room.
+            </p>
+
+            <form class="signup" id="signupForm">
+              <label class="sr-only" for="email">Email address</label>
+              <input id="email" type="email" placeholder="founder@company.com" autocomplete="email">
+              <button type="submit">Join waitlist</button>
+            </form>
+
+            <div class="proof-row" aria-label="Newsletter stats">
+              <span><strong id="subscriberCount">12.8k</strong> readers</span>
+              <span><strong id="openRate">48%</strong> open rate</span>
+              <span><strong>5 min</strong> read</span>
+            </div>
+          </section>
+
+          <section class="showcase" id="preview" aria-label="Newsletter visual preview">
+            <div class="phone">
+              <div class="phone-bar"></div>
+              <div class="phone-screen">
+                <div class="phone-topline">
+                  <span>Today</span>
+                  <span class="live-dot">Live</span>
+                </div>
+                <h2 id="phoneTitle">This Week in Practical AI</h2>
+                <img src="ai-newsletter-hero.png" alt="Abstract AI newsletter hero art">
+                <div class="phone-story main-story">
+                  <span id="phoneCategory">Builder Brief</span>
+                  <strong id="phoneHeadline">Open models push smaller teams closer to custom assistants</strong>
+                  <p id="phoneNote">Focus on what changed for product teams, not benchmark trivia.</p>
+                </div>
+                <div class="story-strip" id="storyStrip"></div>
+              </div>
+            </div>
+
+            <div class="stack-card card-one">
+              <span>Audience</span>
+              <strong id="audienceCard">Product builders</strong>
+            </div>
+            <div class="stack-card card-two">
+              <span>Send status</span>
+              <strong>Ready</strong>
+            </div>
+            <div class="stack-card card-three">
+              <span>Lead source</span>
+              <strong>AI operators</strong>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="crm-wrap" id="crm" aria-label="Newsletter CRM and editor">
+        <div class="section-intro">
+          <p class="pill dark">Background CRM</p>
+          <h2>Change the public app from one control panel.</h2>
+        </div>
+
+        <div class="crm-grid">
+          <aside class="panel issue-panel">
+            <div class="panel-heading">
+              <div>
+                <p>Issue controls</p>
+                <h3>Campaign</h3>
+              </div>
+              <output id="saveStatus" aria-live="polite"></output>
+            </div>
+
             <label>
-              Issue title
-              <input id="issueTitle" type="text" value="This Week in Practical AI">
+              Public headline
+              <textarea id="issueTitle" rows="3">A sharper weekly brief for people building with AI.</textarea>
             </label>
             <label>
-              Audience
-              <select id="audience">
-                <option>Product builders</option>
-                <option>Engineering leaders</option>
-                <option>Startup operators</option>
-                <option>Curious executives</option>
-              </select>
+              Supporting copy
+              <textarea id="subtitle" rows="4">Curate the signal, package the story, and ship a polished issue from one calm control room.</textarea>
             </label>
-            <label>
-              Voice
-              <select id="voice">
-                <option>Clear and pragmatic</option>
-                <option>Brief and punchy</option>
-                <option>Analytical and calm</option>
-                <option>Founder-to-founder</option>
-              </select>
-            </label>
-            <label>
-              Publish date
-              <input id="publishDate" type="date">
-            </label>
+            <div class="field-pair">
+              <label>
+                Audience
+                <select id="audience">
+                  <option>Product builders</option>
+                  <option>Engineering leaders</option>
+                  <option>Startup operators</option>
+                  <option>Curious executives</option>
+                </select>
+              </label>
+              <label>
+                Voice
+                <select id="voice">
+                  <option>Clear and pragmatic</option>
+                  <option>Brief and punchy</option>
+                  <option>Analytical and calm</option>
+                  <option>Founder-to-founder</option>
+                </select>
+              </label>
+            </div>
+            <div class="field-pair">
+              <label>
+                Subscribers
+                <input id="subscribers" type="text" value="12.8k">
+              </label>
+              <label>
+                Open rate
+                <input id="rate" type="text" value="48%">
+              </label>
+            </div>
             <label>
               Sponsor note
               <textarea id="sponsor" rows="4" placeholder="Optional sponsor copy"></textarea>
             </label>
+
+            <div class="button-row">
+              <button class="secondary-action" id="saveDraft" type="button">Save</button>
+              <button class="secondary-action" id="copyMarkdown" type="button">Copy</button>
+              <button class="primary-action" id="downloadMarkdown" type="button">Export</button>
+            </div>
           </aside>
 
-          <section class="panel story-panel" aria-label="Story queue">
-            <div class="section-heading">
+          <section class="panel story-panel">
+            <div class="panel-heading">
               <div>
-                <p class="kicker">Queue</p>
-                <h2>Stories</h2>
+                <p>CRM pipeline</p>
+                <h3>Stories</h3>
               </div>
-              <button class="secondary-action" id="addStory" type="button">Add</button>
+              <button class="add-button" id="addStory" type="button">Add story</button>
             </div>
             <div id="storyList" class="story-list"></div>
           </section>
 
-          <section class="panel preview-panel" aria-label="Newsletter preview">
-            <div class="section-heading">
+          <section class="panel markdown-panel">
+            <div class="panel-heading">
               <div>
-                <p class="kicker">Preview</p>
-                <h2>Markdown</h2>
+                <p>Generated issue</p>
+                <h3>Markdown</h3>
               </div>
-              <output id="saveStatus" aria-live="polite"></output>
             </div>
-            <pre id="preview"></pre>
+            <pre id="previewMarkdown"></pre>
           </section>
-        </section>
+        </div>
       </section>
     </main>
     <script src="src/app.js"></script>

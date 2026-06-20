@@ -1,4 +1,4 @@
-const storageKey = "ai-newsletter-draft";
+const storageKey = "signalstack-draft";
 
 const fallbackStories = [
   {
@@ -26,54 +26,86 @@ const fallbackStories = [
 
 const fields = {
   title: document.querySelector("#issueTitle"),
+  subtitle: document.querySelector("#subtitle"),
   audience: document.querySelector("#audience"),
   voice: document.querySelector("#voice"),
-  publishDate: document.querySelector("#publishDate"),
+  subscribers: document.querySelector("#subscribers"),
+  rate: document.querySelector("#rate"),
   sponsor: document.querySelector("#sponsor"),
   storyList: document.querySelector("#storyList"),
-  preview: document.querySelector("#preview"),
+  preview: document.querySelector("#previewMarkdown"),
   saveStatus: document.querySelector("#saveStatus")
+};
+
+const publicView = {
+  title: document.querySelector("#publicTitle"),
+  subtitle: document.querySelector("#publicSubtitle"),
+  subscribers: document.querySelector("#subscriberCount"),
+  rate: document.querySelector("#openRate"),
+  audience: document.querySelector("#audienceCard"),
+  phoneTitle: document.querySelector("#phoneTitle"),
+  phoneCategory: document.querySelector("#phoneCategory"),
+  phoneHeadline: document.querySelector("#phoneHeadline"),
+  phoneNote: document.querySelector("#phoneNote"),
+  storyStrip: document.querySelector("#storyStrip")
 };
 
 const state = {
   stories: []
 };
 
-function today() {
-  return new Date().toISOString().slice(0, 10);
+function cloneStories() {
+  return fallbackStories.map((story) => ({ ...story }));
 }
 
 function loadDraft() {
   const rawDraft = localStorage.getItem(storageKey);
   if (!rawDraft) {
-    fields.publishDate.value = today();
-    state.stories = structuredClone(fallbackStories);
+    state.stories = cloneStories();
     return;
   }
 
   try {
     const draft = JSON.parse(rawDraft);
     fields.title.value = draft.title || fields.title.value;
+    fields.subtitle.value = draft.subtitle || fields.subtitle.value;
     fields.audience.value = draft.audience || fields.audience.value;
     fields.voice.value = draft.voice || fields.voice.value;
-    fields.publishDate.value = draft.publishDate || today();
+    fields.subscribers.value = draft.subscribers || fields.subscribers.value;
+    fields.rate.value = draft.rate || fields.rate.value;
     fields.sponsor.value = draft.sponsor || "";
-    state.stories = Array.isArray(draft.stories) && draft.stories.length ? draft.stories : structuredClone(fallbackStories);
+    state.stories = Array.isArray(draft.stories) && draft.stories.length ? draft.stories : cloneStories();
   } catch {
-    fields.publishDate.value = today();
-    state.stories = structuredClone(fallbackStories);
+    state.stories = cloneStories();
   }
 }
 
 function collectDraft() {
   return {
     title: fields.title.value.trim(),
+    subtitle: fields.subtitle.value.trim(),
     audience: fields.audience.value,
     voice: fields.voice.value,
-    publishDate: fields.publishDate.value,
+    subscribers: fields.subscribers.value.trim(),
+    rate: fields.rate.value.trim(),
     sponsor: fields.sponsor.value.trim(),
     stories: state.stories
   };
+}
+
+function escapeAttribute(value) {
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
+
+function escapeText(value) {
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
 }
 
 function storyTemplate(story, index) {
@@ -111,28 +143,40 @@ function storyTemplate(story, index) {
   return wrapper;
 }
 
-function escapeAttribute(value) {
-  return String(value || "")
-    .replaceAll("&", "&amp;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;");
-}
-
-function escapeText(value) {
-  return String(value || "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;");
-}
-
 function renderStories() {
   fields.storyList.replaceChildren(...state.stories.map(storyTemplate));
 }
 
+function renderPublicView() {
+  const draft = collectDraft();
+  const mainStory = draft.stories[0] || fallbackStories[0];
+  publicView.title.textContent = draft.title || "A sharper weekly brief for people building with AI.";
+  publicView.subtitle.textContent = draft.subtitle || "Curate the signal, package the story, and ship a polished issue from one calm control room.";
+  publicView.subscribers.textContent = draft.subscribers || "12.8k";
+  publicView.rate.textContent = draft.rate || "48%";
+  publicView.audience.textContent = draft.audience;
+  publicView.phoneTitle.textContent = draft.title || "This Week in Practical AI";
+  publicView.phoneCategory.textContent = mainStory.category || "Builder Brief";
+  publicView.phoneHeadline.textContent = mainStory.title || "Untitled AI story";
+  publicView.phoneNote.textContent = mainStory.note || "Add the angle for this story.";
+
+  const miniStories = draft.stories.slice(1, 4).map((story, index) => {
+    const item = document.createElement("div");
+    item.className = "mini-story";
+    item.innerHTML = `
+      <span class="mini-thumb" aria-hidden="true"></span>
+      <span>
+        <span>${escapeText(story.category || `Signal ${index + 1}`)}</span>
+        <strong>${escapeText(story.title || "Untitled story")}</strong>
+      </span>
+    `;
+    return item;
+  });
+  publicView.storyStrip.replaceChildren(...miniStories);
+}
+
 function buildMarkdown() {
   const draft = collectDraft();
-  const dateLine = draft.publishDate ? `_${draft.publishDate}_` : "_Date TBD_";
   const intro = `For ${draft.audience.toLowerCase()}, here is the ${draft.voice.toLowerCase()} read on the AI stories worth carrying into next week.`;
   const stories = draft.stories.map((story, index) => {
     const title = story.title.trim() || `Untitled story ${index + 1}`;
@@ -143,11 +187,12 @@ function buildMarkdown() {
   }).join("\n\n");
   const sponsor = draft.sponsor ? `\n\n---\n\n**Sponsor**\n\n${draft.sponsor}` : "";
 
-  return `# ${draft.title || "Untitled AI Newsletter"}\n\n${dateLine}\n\n${intro}\n\n## Top Stories\n\n${stories}${sponsor}\n\n## Closing Thought\n\nThe useful question is not whether AI is moving quickly. It is which changes are now stable enough to build around.`;
+  return `# ${draft.title || "Untitled AI Newsletter"}\n\n${draft.subtitle || intro}\n\nAudience: ${draft.audience}\nVoice: ${draft.voice}\n\n## Top Stories\n\n${stories}${sponsor}\n\n## Closing Thought\n\nThe useful question is not whether AI is moving quickly. It is which changes are now stable enough to build around.`;
 }
 
 function renderPreview() {
   fields.preview.textContent = buildMarkdown();
+  renderPublicView();
 }
 
 function saveDraft(showStatus = true) {
@@ -220,6 +265,10 @@ document.querySelector("#addStory").addEventListener("click", addStory);
 document.querySelector("#saveDraft").addEventListener("click", () => saveDraft(true));
 document.querySelector("#downloadMarkdown").addEventListener("click", downloadMarkdown);
 document.querySelector("#copyMarkdown").addEventListener("click", copyMarkdown);
+document.querySelector("#signupForm").addEventListener("submit", (event) => {
+  event.preventDefault();
+  event.currentTarget.querySelector("button").textContent = "You're in";
+});
 
 loadDraft();
 renderStories();
