@@ -2,6 +2,14 @@
 
 A lightweight browser app for planning, drafting, and exporting an AI-focused newsletter issue.
 
+## Open Online
+
+After GitHub Pages finishes deploying, open:
+
+```text
+https://pmatprog.github.io/aiapptest/
+```
+
 ## Run Locally
 
 Open `index.html` directly, or run a local static server:
