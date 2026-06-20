@@ -1,16 +1,10 @@
-# SignalStack Landing Page
+# AI Newsletter App
 
-A simple static landing page for an AI newsletter business.
+A lightweight browser app for planning, drafting, and exporting an AI-focused newsletter issue.
 
-## Preview Locally
+## Run Locally
 
-Open the page directly:
-
-```bash
-open index.html
-```
-
-Or run a local static server:
+Open `index.html` directly, or run a local static server:
 
 ```bash
 python3 -m http.server 8000
@@ -22,12 +16,31 @@ Then visit:
 http://localhost:8000
 ```
 
+If Node and npm are available, you can also run:
+
+```bash
+npm start
+```
+
+Then open:
+
+```text
+http://localhost:5173
+```
+
+## Features
+
+- Issue planning with audience, voice, sponsor, and publish date fields
+- Story queue with category, impact, and source metadata
+- Live generated newsletter preview
+- Browser-saved drafts
+- Markdown export and clipboard copy
+
 ## Publish With GitHub Pages
 
-1. Create a new empty repository on GitHub.
-2. Push this project to the repository.
-3. In GitHub, go to `Settings` > `Pages`.
-4. Set `Source` to `Deploy from a branch`.
-5. Choose the `main` branch and `/root`, then save.
+1. Push this project to the repository.
+2. In GitHub, go to `Settings` > `Pages`.
+3. Set `Source` to `Deploy from a branch`.
+4. Choose the `main` branch and `/root`, then save.
 
 GitHub will provide a public URL after the first deploy finishes.

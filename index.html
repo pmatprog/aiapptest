@@ -1,523 +1,88 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SignalStack | AI Newsletter</title>
-  <style>
-    :root {
-      color-scheme: light;
-      --ink: #17201c;
-      --muted: #5f6f69;
-      --line: #dbe7e2;
-      --paper: #f7faf8;
-      --white: #ffffff;
-      --mint: #dff8ec;
-      --green: #1f7a56;
-      --green-dark: #13523a;
-      --coral: #ff7a59;
-      --yellow: #f6c85f;
-      --shadow: 0 24px 70px rgba(23, 32, 28, 0.14);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--paper);
-      color: var(--ink);
-      line-height: 1.5;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-
-    .page {
-      min-height: 100vh;
-      overflow: hidden;
-    }
-
-    .nav {
-      width: min(1120px, calc(100% - 40px));
-      margin: 0 auto;
-      padding: 24px 0 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 800;
-      letter-spacing: 0;
-    }
-
-    .brand-mark {
-      width: 36px;
-      height: 36px;
-      display: grid;
-      place-items: center;
-      border-radius: 8px;
-      background: var(--ink);
-      color: var(--white);
-      font-weight: 900;
-    }
-
-    .nav-link {
-      color: var(--muted);
-      font-weight: 700;
-      font-size: 0.95rem;
-    }
-
-    .hero {
-      width: min(1120px, calc(100% - 40px));
-      margin: 0 auto;
-      padding: 58px 0 72px;
-      display: grid;
-      grid-template-columns: minmax(0, 0.92fr) minmax(320px, 1.08fr);
-      align-items: center;
-      gap: 46px;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 18px;
-      color: var(--green-dark);
-      font-weight: 800;
-      font-size: 0.88rem;
-    }
-
-    .eyebrow::before {
-      content: "";
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--coral);
-      box-shadow: 16px 0 0 var(--yellow);
-    }
-
-    h1 {
-      margin: 0;
-      max-width: 680px;
-      font-size: clamp(2.6rem, 7vw, 5.8rem);
-      line-height: 0.95;
-      letter-spacing: 0;
-    }
-
-    .subheadline {
-      margin: 24px 0 0;
-      max-width: 610px;
-      color: var(--muted);
-      font-size: 1.18rem;
-    }
-
-    .signup {
-      margin-top: 30px;
-      padding: 8px;
-      max-width: 560px;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 8px;
-      background: var(--white);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      box-shadow: 0 14px 38px rgba(31, 122, 86, 0.10);
-    }
-
-    .signup input {
-      width: 100%;
-      min-width: 0;
-      border: 0;
-      outline: 0;
-      padding: 15px 16px;
-      font: inherit;
-      color: var(--ink);
-      background: transparent;
-    }
-
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 52px;
-      padding: 0 22px;
-      border: 0;
-      border-radius: 8px;
-      background: var(--green);
-      color: var(--white);
-      font: inherit;
-      font-weight: 800;
-      cursor: pointer;
-      transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
-      white-space: nowrap;
-    }
-
-    .button:hover {
-      transform: translateY(-1px);
-      background: var(--green-dark);
-      box-shadow: 0 12px 24px rgba(31, 122, 86, 0.22);
-    }
-
-    .button:focus-visible,
-    .signup input:focus-visible {
-      outline: 3px solid rgba(255, 122, 89, 0.45);
-      outline-offset: 3px;
-    }
-
-    .trust-row {
-      margin-top: 18px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      color: var(--muted);
-      font-size: 0.94rem;
-      font-weight: 650;
-    }
-
-    .trust-row span {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-    }
-
-    .trust-row span::before {
-      content: "";
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--green);
-    }
-
-    .hero-card {
-      position: relative;
-      isolation: isolate;
-    }
-
-    .hero-card::before {
-      content: "";
-      position: absolute;
-      inset: 8% -8% -8% 12%;
-      background: var(--mint);
-      border-radius: 8px;
-      z-index: -1;
-    }
-
-    .hero-image {
-      width: 100%;
-      display: block;
-      aspect-ratio: 4 / 3;
-      object-fit: cover;
-      border-radius: 8px;
-      border: 1px solid rgba(23, 32, 28, 0.10);
-      box-shadow: var(--shadow);
-    }
-
-    .stats {
-      width: min(1120px, calc(100% - 40px));
-      margin: -22px auto 0;
-      padding: 22px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      background: var(--ink);
-      color: var(--white);
-      border-radius: 8px;
-    }
-
-    .stat {
-      padding: 8px;
-    }
-
-    .stat strong {
-      display: block;
-      font-size: 1.55rem;
-      line-height: 1.1;
-    }
-
-    .stat span {
-      display: block;
-      margin-top: 5px;
-      color: rgba(255, 255, 255, 0.72);
-      font-size: 0.95rem;
-    }
-
-    .section {
-      width: min(1120px, calc(100% - 40px));
-      margin: 0 auto;
-      padding: 82px 0 22px;
-    }
-
-    .section-header {
-      max-width: 700px;
-      margin-bottom: 28px;
-    }
-
-    h2 {
-      margin: 0;
-      font-size: clamp(2rem, 4vw, 3.2rem);
-      line-height: 1;
-      letter-spacing: 0;
-    }
-
-    .section-header p {
-      margin: 16px 0 0;
-      color: var(--muted);
-      font-size: 1.05rem;
-    }
-
-    .features {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-
-    .feature {
-      min-height: 230px;
-      padding: 26px;
-      background: var(--white);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-    }
-
-    .icon {
-      width: 44px;
-      height: 44px;
-      display: grid;
-      place-items: center;
-      border-radius: 8px;
-      background: var(--mint);
-      color: var(--green-dark);
-      font-weight: 900;
-      font-size: 1.18rem;
-    }
-
-    .feature h3 {
-      margin: 22px 0 10px;
-      font-size: 1.22rem;
-      line-height: 1.15;
-    }
-
-    .feature p {
-      margin: 0;
-      color: var(--muted);
-    }
-
-    .cta {
-      width: min(1120px, calc(100% - 40px));
-      margin: 64px auto 40px;
-      padding: 42px;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: center;
-      gap: 24px;
-      background: var(--white);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-    }
-
-    .cta h2 {
-      font-size: clamp(1.8rem, 4vw, 3rem);
-    }
-
-    .cta p {
-      margin: 12px 0 0;
-      color: var(--muted);
-      max-width: 650px;
-    }
-
-    footer {
-      width: min(1120px, calc(100% - 40px));
-      margin: 0 auto;
-      padding: 0 0 34px;
-      color: var(--muted);
-      font-size: 0.94rem;
-    }
-
-    @media (max-width: 880px) {
-      .hero {
-        grid-template-columns: 1fr;
-        padding-top: 34px;
-      }
-
-      .hero-card {
-        order: -1;
-      }
-
-      .features,
-      .stats {
-        grid-template-columns: 1fr;
-      }
-
-      .cta {
-        grid-template-columns: 1fr;
-        padding: 30px;
-      }
-
-      .cta .button {
-        width: fit-content;
-      }
-    }
-
-    @media (max-width: 560px) {
-      .nav,
-      .hero,
-      .section,
-      .stats,
-      .cta,
-      footer {
-        width: min(100% - 28px, 1120px);
-      }
-
-      .nav {
-        padding-top: 18px;
-      }
-
-      .nav-link {
-        display: none;
-      }
-
-      .hero {
-        padding-bottom: 44px;
-      }
-
-      .signup {
-        grid-template-columns: 1fr;
-      }
-
-      .button {
-        width: 100%;
-      }
-
-      .trust-row {
-        display: grid;
-      }
-
-      .feature {
-        min-height: auto;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="page">
-    <header class="nav" aria-label="Main navigation">
-      <a class="brand" href="#">
-        <span class="brand-mark">S</span>
-        <span>SignalStack</span>
-      </a>
-      <a class="nav-link" href="#join">Join free today</a>
-    </header>
-
-    <main>
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-copy">
-          <div class="eyebrow">AI made useful every Monday</div>
-          <h1 id="hero-title">Understand AI without feeling behind.</h1>
-          <p class="subheadline">SignalStack turns noisy AI news into a friendly weekly brief with plain-English summaries, beginner tips, and practical prompts you can actually use.</p>
-
-          <form class="signup" id="join">
-            <label class="sr-only" for="email">Email address</label>
-            <input id="email" name="email" type="email" placeholder="Enter your email" required>
-            <button class="button" type="submit">Get the newsletter</button>
-          </form>
-
-          <div class="trust-row" aria-label="Newsletter highlights">
-            <span>5-minute reads</span>
-            <span>No jargon</span>
-            <span>Free starter issue</span>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Newsletter Desk</title>
+    <link rel="stylesheet" href="src/styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="workspace" aria-label="Newsletter editor">
+        <header class="topbar">
+          <div>
+            <p class="kicker">Issue Desk</p>
+            <h1>AI Newsletter</h1>
           </div>
-        </div>
+          <div class="actions">
+            <button class="icon-button" id="saveDraft" type="button" title="Save draft" aria-label="Save draft">
+              <span aria-hidden="true">S</span>
+            </button>
+            <button class="icon-button" id="copyMarkdown" type="button" title="Copy markdown" aria-label="Copy markdown">
+              <span aria-hidden="true">C</span>
+            </button>
+            <button class="primary-action" id="downloadMarkdown" type="button">Export</button>
+          </div>
+        </header>
 
-        <div class="hero-card">
-          <img class="hero-image" src="ai-newsletter-hero.png" alt="A friendly workspace illustration with AI newsletter cards on a laptop.">
-        </div>
-      </section>
+        <section class="editor-grid">
+          <aside class="panel controls" aria-label="Issue controls">
+            <label>
+              Issue title
+              <input id="issueTitle" type="text" value="This Week in Practical AI">
+            </label>
+            <label>
+              Audience
+              <select id="audience">
+                <option>Product builders</option>
+                <option>Engineering leaders</option>
+                <option>Startup operators</option>
+                <option>Curious executives</option>
+              </select>
+            </label>
+            <label>
+              Voice
+              <select id="voice">
+                <option>Clear and pragmatic</option>
+                <option>Brief and punchy</option>
+                <option>Analytical and calm</option>
+                <option>Founder-to-founder</option>
+              </select>
+            </label>
+            <label>
+              Publish date
+              <input id="publishDate" type="date">
+            </label>
+            <label>
+              Sponsor note
+              <textarea id="sponsor" rows="4" placeholder="Optional sponsor copy"></textarea>
+            </label>
+          </aside>
 
-      <section class="stats" aria-label="Newsletter stats">
-        <div class="stat">
-          <strong>12k+</strong>
-          <span>curious readers</span>
-        </div>
-        <div class="stat">
-          <strong>3 ideas</strong>
-          <span>worth trying each issue</span>
-        </div>
-        <div class="stat">
-          <strong>0 fluff</strong>
-          <span>just clear next steps</span>
-        </div>
-      </section>
+          <section class="panel story-panel" aria-label="Story queue">
+            <div class="section-heading">
+              <div>
+                <p class="kicker">Queue</p>
+                <h2>Stories</h2>
+              </div>
+              <button class="secondary-action" id="addStory" type="button">Add</button>
+            </div>
+            <div id="storyList" class="story-list"></div>
+          </section>
 
-      <section class="section" aria-labelledby="features-title">
-        <div class="section-header">
-          <h2 id="features-title">Built for people starting with AI.</h2>
-          <p>Each issue helps you understand what changed, why it matters, and how to try it without needing a technical background.</p>
-        </div>
-
-        <div class="features">
-          <article class="feature">
-            <div class="icon" aria-hidden="true">1</div>
-            <h3>Plain-English breakdowns</h3>
-            <p>Get the big AI stories translated into simple language, with helpful context and clear takeaways.</p>
-          </article>
-
-          <article class="feature">
-            <div class="icon" aria-hidden="true">2</div>
-            <h3>Beginner-ready prompts</h3>
-            <p>Copy practical prompts for writing, research, learning, planning, and everyday work.</p>
-          </article>
-
-          <article class="feature">
-            <div class="icon" aria-hidden="true">3</div>
-            <h3>Tools worth noticing</h3>
-            <p>Discover useful AI apps with quick notes on who they help, what they do, and when to skip them.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="cta" aria-labelledby="cta-title">
-        <div>
-          <h2 id="cta-title">Start learning AI the easy way.</h2>
-          <p>Join thousands of readers getting one calm, practical AI briefing every week.</p>
-        </div>
-        <a class="button" href="#join">Join free</a>
+          <section class="panel preview-panel" aria-label="Newsletter preview">
+            <div class="section-heading">
+              <div>
+                <p class="kicker">Preview</p>
+                <h2>Markdown</h2>
+              </div>
+              <output id="saveStatus" aria-live="polite"></output>
+            </div>
+            <pre id="preview"></pre>
+          </section>
+        </section>
       </section>
     </main>
-
-    <footer>
-      © 2026 SignalStack. Friendly AI updates for curious beginners.
-    </footer>
-  </div>
-
-  <script>
-    document.querySelector(".signup").addEventListener("submit", function (event) {
-      event.preventDefault();
-      const button = event.currentTarget.querySelector("button");
-      button.textContent = "You're on the list";
-      event.currentTarget.reset();
-    });
-  </script>
-</body>
+    <script src="src/app.js"></script>
+  </body>
 </html>

@@ -1,0 +1,16 @@
+{
+  "name": "ai-newsletter-app",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A static AI newsletter planning and drafting app.",
+  "scripts": {
+    "start": "python3 -m http.server 5173",
+    "test": "node --check src/app.js"
+  },
+  "keywords": [
+    "newsletter",
+    "ai",
+    "editor"
+  ],
+  "license": "UNLICENSED"
+}
