@@ -1,4 +1,5 @@
 const storageKey = "signalstack-draft";
+const issueDataUrl = "data/issue.json";
 
 const fallbackStories = [
   {
@@ -60,23 +61,38 @@ function cloneStories() {
   return fallbackStories.map((story) => ({ ...story }));
 }
 
-function loadDraft() {
+function applyDraft(draft) {
+  fields.title.value = draft.title || fields.title.value;
+  fields.subtitle.value = draft.subtitle || fields.subtitle.value;
+  fields.audience.value = draft.audience || fields.audience.value;
+  fields.voice.value = draft.voice || fields.voice.value;
+  fields.subscribers.value = draft.subscribers || fields.subscribers.value;
+  fields.rate.value = draft.rate || fields.rate.value;
+  fields.sponsor.value = draft.sponsor || "";
+  state.stories = Array.isArray(draft.stories) && draft.stories.length ? draft.stories : cloneStories();
+}
+
+async function loadRepoIssue() {
+  const response = await fetch(`${issueDataUrl}?v=${Date.now()}`);
+  if (!response.ok) {
+    throw new Error(`Could not load ${issueDataUrl}`);
+  }
+  return response.json();
+}
+
+async function loadDraft() {
   const rawDraft = localStorage.getItem(storageKey);
   if (!rawDraft) {
-    state.stories = cloneStories();
+    try {
+      applyDraft(await loadRepoIssue());
+    } catch {
+      state.stories = cloneStories();
+    }
     return;
   }
 
   try {
-    const draft = JSON.parse(rawDraft);
-    fields.title.value = draft.title || fields.title.value;
-    fields.subtitle.value = draft.subtitle || fields.subtitle.value;
-    fields.audience.value = draft.audience || fields.audience.value;
-    fields.voice.value = draft.voice || fields.voice.value;
-    fields.subscribers.value = draft.subscribers || fields.subscribers.value;
-    fields.rate.value = draft.rate || fields.rate.value;
-    fields.sponsor.value = draft.sponsor || "";
-    state.stories = Array.isArray(draft.stories) && draft.stories.length ? draft.stories : cloneStories();
+    applyDraft(JSON.parse(rawDraft));
   } catch {
     state.stories = cloneStories();
   }
@@ -243,9 +259,33 @@ function downloadMarkdown() {
   URL.revokeObjectURL(link.href);
 }
 
+function downloadJson() {
+  const blob = new Blob([JSON.stringify(collectDraft(), null, 2)], { type: "application/json" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "issue.json";
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
 async function copyMarkdown() {
   await navigator.clipboard.writeText(buildMarkdown());
   fields.saveStatus.textContent = "Copied";
+  window.setTimeout(() => {
+    fields.saveStatus.textContent = "";
+  }, 1600);
+}
+
+async function reloadRepoData() {
+  try {
+    applyDraft(await loadRepoIssue());
+    renderStories();
+    renderPreview();
+    saveDraft(false);
+    fields.saveStatus.textContent = "Loaded";
+  } catch {
+    fields.saveStatus.textContent = "Load failed";
+  }
   window.setTimeout(() => {
     fields.saveStatus.textContent = "";
   }, 1600);
@@ -280,7 +320,9 @@ document.querySelectorAll("input, select, textarea").forEach((control) => {
 document.querySelector("#addStory").addEventListener("click", addStory);
 document.querySelector("#saveDraft").addEventListener("click", () => saveDraft(true));
 document.querySelector("#downloadMarkdown").addEventListener("click", downloadMarkdown);
+document.querySelector("#downloadJson").addEventListener("click", downloadJson);
 document.querySelector("#copyMarkdown").addEventListener("click", copyMarkdown);
+document.querySelector("#loadRepoData").addEventListener("click", reloadRepoData);
 document.querySelector("#signupForm").addEventListener("submit", (event) => {
   event.preventDefault();
   event.currentTarget.querySelector("button").textContent = "You're in";
@@ -288,7 +330,11 @@ document.querySelector("#signupForm").addEventListener("submit", (event) => {
 
 window.addEventListener("hashchange", syncActiveView);
 
-loadDraft();
-renderStories();
-renderPreview();
-syncActiveView();
+async function initializeApp() {
+  await loadDraft();
+  renderStories();
+  renderPreview();
+  syncActiveView();
+}
+
+initializeApp();

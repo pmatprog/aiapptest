@@ -143,10 +143,16 @@
               <textarea id="sponsor" rows="4" placeholder="Optional sponsor copy"></textarea>
             </label>
 
+            <p class="backend-note">
+              GitHub backend: reader loads from <code>data/issue.json</code>. Export JSON, replace that file, then commit and push.
+            </p>
+
             <div class="button-row">
               <button class="secondary-action" id="saveDraft" type="button">Save</button>
+              <button class="secondary-action" id="loadRepoData" type="button">Load GitHub</button>
               <button class="secondary-action" id="copyMarkdown" type="button">Copy</button>
               <button class="primary-action" id="downloadMarkdown" type="button">Export</button>
+              <button class="secondary-action" id="downloadJson" type="button">Export JSON</button>
             </div>
           </aside>
 

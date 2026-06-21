@@ -58,6 +58,27 @@ http://localhost:5173
 - Live generated newsletter preview
 - Browser-saved drafts
 - Markdown export and clipboard copy
+- GitHub-backed starter content through `data/issue.json`
+
+## GitHub As A Free Backend
+
+This app can use the repository itself as a simple free backend.
+
+The reader/editor loads starter content from:
+
+```text
+data/issue.json
+```
+
+To update the published content:
+
+1. Open the editor view.
+2. Change the issue and stories.
+3. Click `Export JSON`.
+4. Replace `data/issue.json` with the downloaded `issue.json`.
+5. Commit and push the change.
+
+This is free and simple, but it is still a file-based workflow. It does not provide multi-user editing, login, or automatic saves to GitHub from the browser.
 
 ## Publish With GitHub Pages
 

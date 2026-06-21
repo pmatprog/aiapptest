@@ -1,0 +1,32 @@
+{
+  "title": "A sharper weekly brief for people building with AI.",
+  "subtitle": "Curate the signal, package the story, and ship a polished issue from one calm control room.",
+  "audience": "Product builders",
+  "voice": "Clear and pragmatic",
+  "subscribers": "12.8k",
+  "rate": "48%",
+  "sponsor": "",
+  "stories": [
+    {
+      "title": "Open models push smaller teams closer to custom assistants",
+      "category": "Builder Brief",
+      "impact": "High",
+      "source": "Research roundup",
+      "note": "Focus on what changed for product teams, not benchmark trivia."
+    },
+    {
+      "title": "AI coding tools settle into review and maintenance workflows",
+      "category": "Workflow",
+      "impact": "Medium",
+      "source": "Developer survey",
+      "note": "Call out practical adoption patterns and where human review still matters."
+    },
+    {
+      "title": "Enterprise buyers ask harder questions about evals",
+      "category": "Market Signal",
+      "impact": "High",
+      "source": "Procurement notes",
+      "note": "Translate evals into budget and risk language."
+    }
+  ]
+}
